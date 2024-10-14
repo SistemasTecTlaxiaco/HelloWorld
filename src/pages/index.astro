@@ -1,14 +1,15 @@
 ---
-import { helloWorld } from "../contracts/hello_world";
+import { helloWorld } from "../contracts/hello_world.js";
 ---
-
+``
 <html>
   <head>
     <title>Hello World</title>
   </head>
   <body>
     <h1>Check the console for a message!</h1>
-    <script>
+    <script type="module">
+      import { helloWorld } from "../contracts/hello_world.js";
       helloWorld();
     </script>
   </body>
