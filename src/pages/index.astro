@@ -1,5 +1,9 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
 import { helloWorld } from "./hello_world.js";
+import ConnectWallet from '../componentes/ConnectWallet.astro';
+const greeting = "Hello, World!";
 ---
 
 <html>
@@ -8,7 +12,9 @@ import { helloWorld } from "./hello_world.js";
   </head>
   <body>
     <h1>Check the console for a message!</h1>
-    <script type="module">
+    <h1>{greeting}</h1>
+        <ConnectWallet /> 
+   <script type="module">
       import { helloWorld } from "/hello_world.js";
       helloWorld();
     </script>
