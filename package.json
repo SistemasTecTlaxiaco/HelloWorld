@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@astrojs/check": "^0.4.1",
+    "@astrojs/node": "^8.3.4",
+    "@creit.tech/stellar-wallets-kit": "^1.2.3",
     "@types/node": "^22.7.5",
     "astro": "^4.2.4",
     "typescript": "^5.3.3"
