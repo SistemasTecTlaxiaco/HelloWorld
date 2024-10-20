@@ -2,7 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import { helloWorld } from "./hello_world.js";
-import ConnectWallet from '../componentes/ConnectWallet.astro';
+import ConnectFreighter from '../componentes/ConnectFreighter.astro';
+import Counter from '../componentes/Counter.astro';
 const greeting = "Hello, World!";
 ---
 
@@ -13,10 +14,28 @@ const greeting = "Hello, World!";
   <body>
     <h1>Check the console for a message!</h1>
     <h1>{greeting}</h1>
-        <ConnectWallet /> 
-   <script type="module">
+    <ConnectFreighter />
+    <div id="counter-container" style="display: none;">
+      <Counter />
+    </div>
+    <script type="module">
       import { helloWorld } from "/hello_world.js";
+      import { loadedPublicKey } from "../stellar-wallets-kit";
+
       helloWorld();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const publicKey = loadedPublicKey();
+        const counterContainer = document.getElementById("counter-container");
+
+        if (publicKey) {
+          counterContainer.style.display = "block";
+        }
+
+        document.addEventListener("walletConnected", (event) => {
+          counterContainer.style.display = "block";
+        });
+      });
     </script>
   </body>
 </html>
