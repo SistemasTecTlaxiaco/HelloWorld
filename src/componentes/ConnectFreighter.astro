@@ -6,7 +6,9 @@ import { kit, loadedPublicKey } from "../stellar-wallets-kit";
 <button id="connect-freighter-button">Connect Freighter</button>
 
 <script>
-  onMount(() => {
+  import { kit, loadedPublicKey } from "../stellar-wallets-kit";
+
+  document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("connect-freighter-button");
 
     button.addEventListener("click", async () => {
