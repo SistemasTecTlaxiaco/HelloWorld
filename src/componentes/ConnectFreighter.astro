@@ -1,27 +1,32 @@
 ---
-import { onMount } from "astro/client";
+import { onMount } from "astro";
 import { kit, loadedPublicKey } from "../stellar-wallets-kit";
 ---
 
 <button id="connect-freighter-button">Connect Freighter</button>
+<p id="status-message">Status: Not connected</p>
 
 <script>
   import { kit, loadedPublicKey } from "../stellar-wallets-kit";
 
   document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOMContentLoaded event fired in ConnectFreighter.astro");
     const button = document.getElementById("connect-freighter-button");
+    const statusMessage = document.getElementById("status-message");
 
     button.addEventListener("click", async () => {
+      console.log("Button clicked");
+      statusMessage.textContent = "Status: Button clicked";
       try {
-        await kit.connect();
-        const publicKey = loadedPublicKey();
+        const publicKey = await loadedPublicKey();
         if (publicKey) {
-          alert(`Connected to Freighter with public key: ${publicKey}`);
-          // Optionally, you can trigger an event or update the UI to reflect the connection status
+          console.log(`Connected to Freighter with public key: ${publicKey}`);
+          statusMessage.textContent = `Public Key: ${publicKey}`;
           document.dispatchEvent(new CustomEvent("walletConnected", { detail: { publicKey } }));
         }
       } catch (e) {
         console.error("Error connecting to Freighter:", e);
+        statusMessage.textContent = "Status: Failed to connect";
         alert("Failed to connect to Freighter. Please try again.");
       }
     });

@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
-import helloWorld from "../pages/hello_world.js";
+import { helloWorld } from "./hello_world.js";
 import ConnectFreighter from '../componentes/ConnectFreighter.astro';
 import Counter from '../componentes/Counter.astro';
 const greeting = "Hello, World!";
@@ -12,7 +12,6 @@ const greeting = "Hello, World!";
     <title>Hello World</title>
   </head>
   <body>
-    <h1>Check the console for a message!</h1>
     <h1>{greeting}</h1>
     <ConnectFreighter />
     <div id="counter-container" style="display: none;">
@@ -24,17 +23,24 @@ const greeting = "Hello, World!";
 
       helloWorld();
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const publicKey = loadedPublicKey();
-        const counterContainer = document.getElementById("counter-container");
+      document.addEventListener("DOMContentLoaded", async () => {
+        console.log("DOMContentLoaded event fired in index.astro");
+        try {
+          const publicKey = await loadedPublicKey();
+          const counterContainer = document.getElementById("counter-container");
 
-        if (publicKey) {
-          counterContainer.style.display = "block";
+          if (publicKey) {
+            console.log("Public key found:", publicKey);
+            counterContainer.style.display = "block";
+          }
+
+          document.addEventListener("walletConnected", (event) => {
+            console.log("walletConnected event fired");
+            counterContainer.style.display = "block";
+          });
+        } catch (error) {
+          console.error("Error during DOMContentLoaded:", error);
         }
-
-        document.addEventListener("walletConnected", (event) => {
-          counterContainer.style.display = "block";
-        });
       });
     </script>
   </body>
