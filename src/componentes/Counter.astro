@@ -1,0 +1,131 @@
+<strong>Incrementor</strong><br />
+Current value: <strong id="current-value" aria-live="polite">???</strong><br />
+<br />
+<button data-increment aria-controls="current-value">Increment</button>
+
+<script>
+  import { kit, loadedPublicKey } from "../stellar-wallets-kit";
+  import incrementor from "../contracts/soroban_increment_contract";
+  const button = document.querySelector("[data-increment]");
+  const currentValue = document.querySelector("#current-value");
+
+  async function updateCurrentValue() {
+    const publicKey = loadedPublicKey();
+    if (!publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    try {
+      const value = await incrementor.getValue({ publicKey });
+      currentValue.innerHTML = value.toString();
+    } catch (e) {
+      console.error('Error getting current value:', e);
+    }
+  }
+
+  button.addEventListener("click", async () => {
+    const publicKey = loadedPublicKey();
+
+    if (!publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    } else {
+      incrementor.options.publicKey = publicKey;
+    }
+
+    button.disabled = true;
+    button.classList.add("loading");
+    currentValue.innerHTML =
+      currentValue.innerHTML +
+      '<span class="visually-hidden"> – updating…</span>';
+
+    const tx = await incrementor.increment();
+
+    try {
+      const { result } = await tx.signAndSend({
+        signTransaction: async (xdr) => {
+          const { signedTxXdr } = await kit.signTransaction(xdr);
+          return signedTxXdr;
+        },
+      });
+
+      // Only use `innerHTML` with contract values you trust!
+      // Blindly using values from an untrusted contract opens your users to script injection attacks!
+      await updateCurrentValue();
+    } catch (e) {
+      console.error(e);
+    }
+
+    button.disabled = false;
+    button.classList.remove("loading");
+  });
+
+  // Update the current value when the page loads
+  document.addEventListener("DOMContentLoaded", updateCurrentValue);
+</script>
+    console.log('Get value successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Error getting current value:', error);
+    throw error;
+  }
+}
+---
+
+<strong>Incrementor</strong><br />
+Current value: <strong id="current-value" aria-live="polite">???</strong><br />
+<br />
+<button data-increment aria-controls="current-value">Increment</button>
+
+<script>
+  import { kit, loadedPublicKey } from "../stellar-wallets-kit";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector("[data-increment]");
+    const currentValue = document.querySelector("#current-value");
+
+    async function updateCurrentValue() {
+      const publicKey = loadedPublicKey();
+      if (!publicKey) {
+        alert("Please connect your wallet first");
+        return;
+      }
+
+      try {
+        const result = await getCurrentValue(publicKey);
+        currentValue.innerHTML = result.result.toString();
+      } catch (e) {
+        console.error('Error getting current value:', e);
+      }
+    }
+
+    button.addEventListener("click", async () => {
+      const publicKey = loadedPublicKey();
+
+      if (!publicKey) {
+        alert("Please connect your wallet first");
+        return;
+      }
+
+      button.disabled = true;
+      button.classList.add("loading");
+      currentValue.innerHTML =
+        currentValue.innerHTML +
+        '<span class="visually-hidden"> – updating…</span>';
+
+      try {
+        await incrementCounter(publicKey);
+        await updateCurrentValue();
+      } catch (e) {
+        console.error(e);
+      }
+
+      button.disabled = false;
+      button.classList.remove("loading");
+    });
+
+    // Actualizar el valor actual al cargar la página
+    updateCurrentValue();
+  });
+</script>
