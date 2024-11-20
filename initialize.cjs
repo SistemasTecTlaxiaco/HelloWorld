@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { execSync } from 'child_process';
+const execSync = require('child_process').execSync;
 
 // Function to execute and log s
 function exe(command) {
@@ -21,6 +21,11 @@ function identityExists(identity) {
 }
 
 function fundAll() {
+  const rpcUrl = process.env.PUBLIC_SOROBAN_RPC_URL;
+  const networkPassphrase = process.env.PUBLIC_SOROBAN_NETWORK_PASSPHRASE;
+  const network = process.env.SOROBAN_NETWORK;
+  const account = process.env.SOROBAN_ACCOUNT;
+
   if (!identityExists('josealfredoroman_unique')) {
     exe('stellar keys generate --network testnet josealfredoroman_unique --fund');
     exe('stellar keys fund --network testnet josealfredoroman_unique');
@@ -34,6 +39,9 @@ function fundAll() {
   } else {
     console.log('Identity josealfredoroman already exists');
   }
+
+  exe(`stellar keys generate --network ${network} ${account}`);
 }
 
+console.log('###################### Initializing ########################');
 fundAll();
